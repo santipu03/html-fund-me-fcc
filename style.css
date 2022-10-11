@@ -37,7 +37,7 @@ header {
     padding: 20px;
     display: flex;
     justify-content: space-between;
-    background-color: bisque;
+    background-color: #c4b5fd;
 }
 
 main {
@@ -64,8 +64,14 @@ section {
     padding: 80px;
     font-weight: bold;
 }
+
 .alertSection div {
-    padding: 30px 160px;
+    min-height: 85px;
+    min-width: 530px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid #000;
 }
 
@@ -96,5 +102,5 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: lightcoral;
+    background-color: #ddd6fe;
 }

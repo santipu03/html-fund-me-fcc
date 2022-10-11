@@ -5,30 +5,32 @@ const connectButton = document.getElementById("connectBtn")
 const fundButton = document.getElementById("fundBtn")
 const balanceButton = document.getElementById("balanceBtn")
 const withdrawButton = document.getElementById("withdrawBtn")
+const message = document.getElementById("message")
+const ethAmountInput = document.getElementById("ethAmount")
 
 connectButton.onclick = connect
 fundButton.onclick = fund
 balanceButton.onclick = getBalance
-withdrawBtn.onclick = withdraw
+withdrawButton.onclick = withdraw
 
 async function connect() {
     if (typeof window.ethereum != "undefined") {
         try {
             await window.ethereum.request({ method: "eth_requestAccounts" })
         } catch (e) {
-            console.log(e)
+            message.innerHTML = e
         }
         connectButton.innerHTML = "Connected!"
         const accounts = await ethereum.request({ method: "eth_accounts" })
-        console.log(accounts)
+        message.innerHTML = `Address: ${accounts}`
     } else {
         connectButton.innerHTML = "Please install metamask"
     }
 }
 
 async function fund() {
-    const ethAmount = document.getElementById("ethAmount").value
-    console.log(`funding with ${ethAmount}...`)
+    const ethAmount = ethAmountInput.value ? ethAmountInput.value : "0.1"
+    message.innerHTML = `funding with ${ethAmount}...`
     if (typeof window.ethereum != "undefined") {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
@@ -38,7 +40,7 @@ async function fund() {
                 value: ethers.utils.parseEther(ethAmount),
             })
             await listenForTransactionMine(transactionResponse, provider)
-            console.log("Done!")
+            message.innerHTML = "Done!"
         } catch (e) {
             console.log(e)
         }
@@ -48,7 +50,7 @@ async function fund() {
 }
 
 async function withdraw() {
-    console.log(`Withdrawing funds...`)
+    message.innerHTML = "Withdrawing funds..."
     if (typeof window.ethereum != "undefined") {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
@@ -56,12 +58,12 @@ async function withdraw() {
         try {
             const transactionResponse = await contract.withdraw()
             await listenForTransactionMine(transactionResponse, provider)
-            console.log("Done!")
+            message.innerHTML = "Done!"
         } catch (e) {
             console.log(e)
         }
     } else {
-        withdrawButton.innerHTML = "Please Install Metamask"
+        message.innerHTML = "Please Install Metamask"
     }
 }
 
@@ -70,12 +72,14 @@ async function getBalance() {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         try {
             const balance = await provider.getBalance(contractAddress)
-            console.log(ethers.utils.formatEther(balance))
+            message.innerHTML = `Balance: ${ethers.utils.formatEther(
+                balance
+            )} ETH`
         } catch (e) {
             console.log(e)
         }
     } else {
-        balanceButton.innerHTML = "Please Install Metamask"
+        message.innerHTML = "Please Install Metamask"
     }
 }
 
